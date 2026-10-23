@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+    <meta name="theme-color" content="#17110c" />
+    <meta name="description" content="레버와 잔을 조작해 가장 완벽한 생맥주 한 잔을 따르는 3D 물리 시뮬레이션 게임" />
+    <title>Perfect Pour - 맥주따르기게임</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍺</text></svg>" />
+  </head>
+  <body>
+    <div id="app">
+      <div id="stage"></div>
+
+      <div id="hud" aria-live="polite">
+        <div class="hud-time"><span id="hud-time">0.00</span><small>초</small></div>
+        <div id="hud-status">레버를 내려 따르기 시작</div>
+        <div class="hud-row">
+          <span class="hud-label">레버</span>
+          <div id="lever-gauge" class="lever-gauge"></div>
+        </div>
+        <div class="hud-row">
+          <span class="hud-label">기울기</span><b id="hud-tilt">0°</b>
+          <span class="hud-label">높이</span><b id="hud-height">1</b>
+        </div>
+        <div class="fill-meter" title="잔 충전율">
+          <div class="fill-track">
+            <div id="fill-beer" class="fill-beer"></div>
+            <div id="fill-foam" class="fill-foam"></div>
+          </div>
+          <span id="fill-text">0%</span>
+        </div>
+      </div>
+
+      <div id="topbar">
+        <button id="btn-sound" class="icon-btn" aria-label="소리 켜기/끄기">🔊</button>
+        <button id="btn-help" class="icon-btn" aria-label="도움말">?</button>
+      </div>
+
+      <div id="challenge-banner" hidden>
+        <div class="challenge-text"></div>
+        <button id="btn-challenge-exit" class="link-btn">일반 모드로</button>
+      </div>
+
+      <div id="toast" role="status" hidden></div>
+
+      <div id="controls" aria-label="조작 버튼">
+        <div class="pad glass-pad">
+          <span class="pad-title">잔</span>
+          <button data-cmd="raise" aria-label="잔 올리기">▲<small>올리기</small></button>
+          <button data-cmd="tilt" aria-label="잔 기울이기">↶<small>기울이기</small></button>
+          <button data-cmd="untilt" aria-label="잔 세우기">↷<small>세우기</small></button>
+          <button data-cmd="lower" aria-label="잔 내리기">▼<small>내리기</small></button>
+        </div>
+        <div class="pad lever-pad">
+          <span class="pad-title">레버</span>
+          <button data-cmd="leverUp" class="foam-btn" aria-label="레버 위 (거품)">▲<small>거품</small></button>
+          <button data-cmd="leverDown" class="beer-btn" aria-label="레버 아래 (맥주)">▼<small>맥주</small></button>
+        </div>
+      </div>
+
+      <div id="key-hints">
+        <span><kbd>J</kbd> 레버↓ 맥주</span><span><kbd>K</kbd> 레버↑ 거품</span>
+        <span><kbd>A</kbd>/<kbd>D</kbd> 기울이기/세우기</span><span><kbd>W</kbd>/<kbd>S</kbd> 잔 올리기/내리기</span>
+      </div>
+
+      <section id="help" class="overlay" hidden>
+        <div class="panel">
+          <h1>🍺 Perfect Pour</h1>
+          <p class="lead">레버와 잔을 조작해 <b>가장 완벽한 생맥주 한 잔</b>을 따르세요.</p>
+          <ul class="rules">
+            <li>레버를 <b>아래</b>로 내리면 맥주, <b>위</b>로 올리면 거품이 나옵니다. 가운데에서 멀수록 유량이 커집니다.</li>
+            <li>처음 따르기 전에는 잔의 기울기와 높이를 미리 맞춰 둘 수 있습니다.</li>
+            <li>높은 곳에서 세게 부으면 거품이 많아지고 탄산이 빠집니다. 잔을 기울이거나 올려서 부드럽게 따르세요.</li>
+            <li>레버를 가운데로 돌려도 흐름은 잠시 이어집니다. 흐름이 <b>완전히 끊기면</b> 따르기가 끝납니다.</li>
+            <li>잔 밖으로 흘리거나 거품이 넘치면 그 즉시 끝납니다.</li>
+            <li>평가 항목: 온도감(속도) · 청량감(맥주 비율·탄산) · 부드러움(거품 비율) · 양 · 로스. 맥주와 거품은 약 7:3이 이상적입니다.</li>
+          </ul>
+          <div class="help-keys">
+            <div><kbd>J</kbd> 레버 아래(맥주)</div><div><kbd>K</kbd> 레버 위(거품)</div>
+            <div><kbd>A</kbd> 잔 기울이기</div><div><kbd>D</kbd> 잔 세우기</div>
+            <div><kbd>W</kbd> 잔 올리기</div><div><kbd>S</kbd> 잔 내리기</div>
+          </div>
+          <p class="hint">모바일에서는 화면 아래 버튼을 사용합니다. 한 번 누를 때마다 한 단계씩 움직입니다.</p>
+          <button id="btn-help-close" class="primary-btn">시작하기</button>
+        </div>
+      </section>
+
+      <section id="pause" class="overlay" hidden>
+        <div class="panel small">
+          <h2>일시정지</h2>
+          <p>탭이 가려져 게임을 멈췄습니다. 멈춘 시간은 기록에 포함되지 않습니다.</p>
+          <button id="btn-resume" class="primary-btn">계속하기</button>
+        </div>
+      </section>
+
+      <section id="result" class="overlay" hidden>
+        <div class="panel result-panel">
+          <div id="result-reason" class="result-reason"></div>
+          <div id="result-title" class="result-title"></div>
+          <div class="result-total"><span id="result-total">0</span><small id="result-max">/ 1000</small></div>
+          <div id="result-best" class="result-best"></div>
+          <div id="result-items" class="result-items"></div>
+          <div id="result-metrics" class="result-metrics"></div>
+          <div id="result-compare" class="result-compare" hidden></div>
+          <div class="share-row">
+            <input id="nick-input" type="text" maxlength="12" placeholder="닉네임 (선택)" autocomplete="off" />
+            <button id="btn-share" class="secondary-btn">기록 공유</button>
+          </div>
+          <input id="share-url" class="share-url" type="text" readonly hidden />
+          <button id="btn-retry" class="primary-btn">다시 따르기 <small>(R)</small></button>
+        </div>
+      </section>
+
+      <div id="fps" hidden></div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

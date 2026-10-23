@@ -1,0 +1,130 @@
+{
+  "version": "1.0.0",
+  "simulation": {
+    "stepHz": 120,
+    "maxStepsPerFrame": 8,
+    "gravity": 981
+  },
+  "controls": {
+    "keys": {
+      "leverDown": ["KeyJ"],
+      "leverUp": ["KeyK"],
+      "tilt": ["KeyA"],
+      "untilt": ["KeyD"],
+      "raise": ["KeyW"],
+      "lower": ["KeyS"]
+    },
+    "restartKeys": ["KeyR", "Enter", "Space"]
+  },
+  "lever": {
+    "beerFlow": [12, 24, 36, 48, 60],
+    "foamFlow": [8, 16, 24, 32, 40],
+    "degPerStep": 7
+  },
+  "flow": {
+    "riseTime": 0.12,
+    "decayTime": 0.35,
+    "minEffectiveFlow": 3,
+    "breakGrace": 0.1,
+    "baseExitSpeed": 20,
+    "exitSpeedPerFlow": 1.0,
+    "maxTotalFlow": 60,
+    "streamHalfWidth": 0.3,
+    "nozzleFoamLiquidFraction": 0.22,
+    "nozzleFoamFineness": 0.9
+  },
+  "dispenser": {
+    "nozzleY": 40,
+    "trayY": 0
+  },
+  "glass": {
+    "name": "pint-500",
+    "bottomRadius": 2.9,
+    "topRadius": 3.8,
+    "height": 14,
+    "wallThickness": 0.22,
+    "baseThickness": 0.7,
+    "pivotFromBottom": 11.2,
+    "tiltStepDeg": 5,
+    "tiltMaxDeg": 60,
+    "tiltSpeedDegPerSec": 150,
+    "heightSteps": 10,
+    "heightStepCm": 2.5,
+    "heightSpeedCmPerSec": 25,
+    "basePivotY": 12.6,
+    "nozzleClearance": 1.0,
+    "trayClearance": 0.2
+  },
+  "collision": {
+    "referenceSpeed": 205,
+    "flowInfluence": 0.4,
+    "minFoamThickness": 0.15
+  },
+  "reaction": {
+    "foamThresholdIntensity": 1.0,
+    "foamGenExponent": 2,
+    "foamGenBeerGlass": 3.0,
+    "foamGenBeerBeer": 4.0,
+    "foamGenBeerFoam": 5.0,
+    "maxFoamConversion": 0.6,
+    "gasPerFoamLiquid": 5.0,
+    "carbonationLossCoef": 0.2,
+    "maxCarbonationLoss": 0.5,
+    "foamDestroyPerBeer": 0.1,
+    "foamCushionDepth": 30.0,
+    "foamGlassDestroy": 0.1,
+    "foamBeerDestroy": 0.05,
+    "foamFoamDestroy": 0.12,
+    "foamFoamCoarsen": 0.15,
+    "impactFoamFinenessBase": 0.75,
+    "impactFoamFinenessSlope": 0.25,
+    "turbulenceCoef": 0.08,
+    "sloshCoef": 0.8,
+    "splashThresholdIntensity": 1.0,
+    "splashOutCoef": 0.05,
+    "splashOutDepth": 1.5
+  },
+  "beer": {
+    "foamDecayBase": 0.01,
+    "foamDecayCoarse": 0.06,
+    "carbonationDecay": 0.004,
+    "turbulenceDecayTime": 0.6,
+    "turbulenceFoamRate": 0.04,
+    "turbulenceGasPerLiquid": 3.0,
+    "sloshDecayTime": 0.8,
+    "sloshMoveCoef": 0.004,
+    "sloshCapacityFactor": 0.5,
+    "maxSlosh": 0.8
+  },
+  "spill": {
+    "endThresholdLiquid": 1.5
+  },
+  "settle": {
+    "minSeconds": 1.0,
+    "maxSeconds": 3.0
+  },
+  "score": {
+    "weights": {
+      "temperature": 200,
+      "refreshment": 200,
+      "smoothness": 200,
+      "volume": 200,
+      "loss": 200
+    },
+    "temperature": { "fullUntil": 10, "zeroAt": 40 },
+    "refreshment": { "optimalBeerRatio": 0.7, "ratioTolerance": 0.3, "carbonationWeight": 0.4, "carbonationFloor": 0.5 },
+    "smoothness": { "optimalFoamRatio": 0.3, "toleranceBelow": 0.2, "toleranceAbove": 0.35 },
+    "volume": { "minFill": 0.5, "fullFill": 0.97, "exponent": 1.3 },
+    "maxLossRate": 0.01,
+    "fillGate": 0.8,
+    "titles": [
+      { "min": 950, "name": "전설의 비어 마스터" },
+      { "min": 850, "name": "마스터 비어텐더" },
+      { "min": 700, "name": "프로 바텐더" },
+      { "min": 550, "name": "숙련 바텐더" },
+      { "min": 400, "name": "견습 바텐더" },
+      { "min": 200, "name": "초보 알바생" },
+      { "min": 0, "name": "맥주 테러리스트" }
+    ]
+  }
+}
